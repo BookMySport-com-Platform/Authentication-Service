@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Entity
 @Component
 @Data
-@Table(name = "user_details")
-public class UserModel {
+@Table(name = "service_provider_details")
+public class ServiceProviderModel {
     
     @Id
     @GeneratedValue(generator = "UUID")
@@ -42,5 +42,48 @@ public class UserModel {
 
     @NotNull
     private String password;
-    
+
+    @NotNull
+    private String address;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
