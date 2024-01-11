@@ -28,13 +28,13 @@ public class MainController {
     }
 
     @GetMapping("login")
-    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel) {
-        return userService.userLoginService(loginModel);
+    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel,@RequestHeader String role) {
+        return userService.userLoginService(loginModel,role);
     }
 
     @PostMapping("2fa")
-    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser) {
-        return userService.TwoFAService(otpforTwoFAFromUser);
+    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser, @RequestHeader String role) {
+        return userService.TwoFAService(otpforTwoFAFromUser,role);
     }
 
     @PostMapping("forgotpassword")
@@ -48,8 +48,8 @@ public class MainController {
     }
 
     @PostMapping("resetpassword")
-    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser) {
-        return userService.resetThePasswordService(passwordFromUser);
+    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser,@RequestHeader String role) {
+        return userService.resetThePasswordService(passwordFromUser,role);
     }
 
 }
