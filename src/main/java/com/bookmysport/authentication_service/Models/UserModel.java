@@ -21,15 +21,15 @@ import org.springframework.stereotype.Component;
 @Data
 @Table(name = "user_details")
 public class UserModel {
-    
+
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID" , strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "user_id")
     private UUID id;
 
     @NotNull
-    @Size(min = 3,max = 15)
+    @Size(min = 3, max = 15)
     private String userName;
 
     @NotNull
@@ -37,10 +37,10 @@ public class UserModel {
     private String email;
 
     @NotNull
-    @NumberFormat(pattern="Enter a number")
+    @NumberFormat(pattern = "Enter a number")
     private int phoneNumber;
 
     @NotNull
     private String password;
-    
+
 }

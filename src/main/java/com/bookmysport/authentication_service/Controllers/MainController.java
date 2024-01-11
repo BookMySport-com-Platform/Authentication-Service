@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookmysport.authentication_service.Models.LoginModel;
-import com.bookmysport.authentication_service.Models.UserModel;
 import com.bookmysport.authentication_service.UserServices.UserService;
 
 import jakarta.validation.Valid;
@@ -24,18 +23,18 @@ public class MainController {
     private UserService userService;
 
     @PostMapping("adduser")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody UserModel user, BindingResult bindingResult) {
-        return userService.userRegisterService(user, bindingResult);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader int l) {
+        return userService.userRegisterService(userOrService, bindingResult,l);
     }
 
     @GetMapping("login")
-    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel) {
-        return userService.userLoginService(loginModel);
+    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel,@RequestHeader String role) {
+        return userService.userLoginService(loginModel,role);
     }
 
     @PostMapping("2fa")
-    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser) {
-        return userService.TwoFAService(otpforTwoFAFromUser);
+    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser, @RequestHeader String role) {
+        return userService.TwoFAService(otpforTwoFAFromUser,role);
     }
 
     @PostMapping("forgotpassword")
@@ -49,8 +48,8 @@ public class MainController {
     }
 
     @PostMapping("resetpassword")
-    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser) {
-        return userService.resetThePasswordService(passwordFromUser);
+    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser,@RequestHeader String role) {
+        return userService.resetThePasswordService(passwordFromUser,role);
     }
 
 }
