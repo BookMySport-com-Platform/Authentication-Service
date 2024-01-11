@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookmysport.authentication_service.Models.LoginModel;
-import com.bookmysport.authentication_service.Models.UserModel;
 import com.bookmysport.authentication_service.UserServices.UserService;
 
 import jakarta.validation.Valid;
@@ -24,8 +23,8 @@ public class MainController {
     private UserService userService;
 
     @PostMapping("adduser")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody UserModel user, BindingResult bindingResult) {
-        return userService.userRegisterService(user, bindingResult);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader int l) {
+        return userService.userRegisterService(userOrService, bindingResult,l);
     }
 
     @GetMapping("login")

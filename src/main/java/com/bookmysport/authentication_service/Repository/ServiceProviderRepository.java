@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.bookmysport.authentication_service.Models.ServiceProviderModel;
 
 public interface ServiceProviderRepository extends JpaRepository<ServiceProviderModel, UUID> {
-
+    ServiceProviderModel findByEmail(String email);
 }

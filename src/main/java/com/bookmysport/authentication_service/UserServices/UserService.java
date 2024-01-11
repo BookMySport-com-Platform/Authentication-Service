@@ -15,17 +15,23 @@ import com.bookmysport.authentication_service.Models.EmailModel;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.OtpUserModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
+import com.bookmysport.authentication_service.Models.ServiceProviderModel;
 import com.bookmysport.authentication_service.Models.TwoFA;
 import com.bookmysport.authentication_service.Models.UserModel;
+import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
 import com.bookmysport.authentication_service.Repository.UserRepository;
 import com.bookmysport.authentication_service.StaticInfo.OTPGenerator;
 import com.bookmysport.authentication_service.StaticInfo.StaticVariables;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
 
     @Autowired
     private ResponseMessage responseMessage;
@@ -81,7 +87,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<Object> userRegisterService(UserModel userModel, BindingResult bindingResult) {
+    public ResponseEntity<Object> userRegisterService(Object userOrService, BindingResult bindingResult, int l) {
         try {
             if (!bindingResult.hasErrors()) {
                 if (bindingResult.hasFieldErrors()) {
@@ -89,26 +95,62 @@ public class UserService {
                     responseMessage.setMessage("Enter valid Email");
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
-                UserModel userByEmail = userRepository.findByEmail(userModel.getEmail());
-                if (userByEmail == null) {
-                    userModel.setPassword(hashPassword(userModel.getPassword()));
-                    userRepository.save(userModel);
-                    responseMessage.setSuccess(true);
-                    responseMessage.setMessage("Account Created Successfully!");
-                    responseMessage.setToken(authService.generateToken(userModel.getEmail()));
-                    return ResponseEntity.badRequest().body(responseMessage);
-                } else {
+
+                if (l == 4) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    UserModel userModel = objectMapper.convertValue(userOrService, UserModel.class);
+                    System.out.println(userModel.getClass().getName());
+                    UserModel userByEmail = userRepository.findByEmail(userModel.getEmail());
+                    if (userByEmail == null) {
+                        userModel.setPassword(hashPassword(userModel.getPassword()));
+                        userRepository.save(userModel);
+                        responseMessage.setSuccess(true);
+                        responseMessage.setMessage("Account Created Successfully!");
+                        responseMessage.setToken(authService.generateToken(userModel.getEmail()));
+                        return ResponseEntity.badRequest().body(responseMessage);
+                    } else {
+                        responseMessage.setSuccess(false);
+                        responseMessage.setMessage("User with this email already exists!");
+                        responseMessage.setToken(null);
+                        return ResponseEntity.badRequest().body(responseMessage);
+                    }
+                }
+
+                else if (l == 5) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    ServiceProviderModel serviceProviderModel = objectMapper.convertValue(userOrService, ServiceProviderModel.class);
+                    ServiceProviderModel serviceProvierByEmail = serviceProviderRepository
+                            .findByEmail(serviceProviderModel.getEmail());
+
+                    if (serviceProvierByEmail == null) {
+                        serviceProviderModel.setPassword(hashPassword(serviceProviderModel.getPassword()));
+                        serviceProviderRepository.save(serviceProviderModel);
+                        responseMessage.setSuccess(true);
+                        responseMessage.setMessage("Account Created Successfully!");
+                        responseMessage.setToken(authService.generateToken(serviceProviderModel.getEmail()));
+                        return ResponseEntity.badRequest().body(responseMessage);
+                    } else {
+                        responseMessage.setSuccess(false);
+                        responseMessage.setMessage("User with this email already exists!");
+                        responseMessage.setToken(null);
+                        return ResponseEntity.badRequest().body(responseMessage);
+                    }
+                }
+
+                else {
                     responseMessage.setSuccess(false);
-                    responseMessage.setMessage("User with this email already exists!");
+                    responseMessage.setMessage("Invalid Input!");
                     responseMessage.setToken(null);
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
+
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Invalid user name or email");
                 return ResponseEntity.badRequest().body(responseMessage);
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error!");
         }
