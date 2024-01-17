@@ -1,5 +1,6 @@
 package com.bookmysport.authentication_service.UserServices;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -11,7 +12,9 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class AuthService {
-    private static String secretKey = "SECRETKEYSECRETKEYSECRETKEYSECRETKEYSECRETKEYSECRETKEYSECRETKEY";
+    
+    @Value("${SECRET_KEY}")
+    private String secretKey;
 
     public String generateToken(String email) {
         try {
