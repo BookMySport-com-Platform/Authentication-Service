@@ -213,7 +213,7 @@ public class UserService {
                         responseMessage.setSuccess(true);
                         responseMessage.setMessage("Logged in Successfully!");
                         responseMessage.setToken(null);
-                        twoFA.setEmail(serviceProviderModel.getEmail());
+                        twoFAServiceProvider.setEmail(serviceProviderModel.getEmail());
                         generateOTPforTwoFAServiceProviderService(serviceProviderModel);
                         return ResponseEntity.ok().body(responseMessage);
                     } else {
@@ -338,6 +338,39 @@ public class UserService {
             }
 
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
+        }
+    }
+
+    public ResponseEntity<Object> getUserDetailsByEmailService(String token, String role) {
+        try {
+            String email = authService.verifyToken(token);
+            if (role.equals("user")) {
+                UserModel user = userRepository.findByEmail(email);
+                if (user != null) {
+                    // responseMessage.setSuccess(true);
+                    // responseMessage.setMessage(user);
+                    return ResponseEntity.ok(user);
+                } else {
+                    responseMessage.setSuccess(false);
+                    responseMessage.setMessage("Invalid email");
+                    return ResponseEntity.badRequest().body(responseMessage);
+                }
+            } else {
+                ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
+                if (serviceProvider != null) {
+                    // responseMessage.setSuccess(true);
+                    // responseMessage.setMessage(serviceProvider);
+                    return ResponseEntity.ok(serviceProvider);
+                } else {
+                    responseMessage.setSuccess(false);
+                    responseMessage.setMessage("Invalid email");
+                    return ResponseEntity.badRequest().body(responseMessage);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
         }
     }

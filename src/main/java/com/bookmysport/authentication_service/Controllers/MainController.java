@@ -27,6 +27,12 @@ public class MainController {
         return userService.userRegisterService(userOrService, bindingResult,l);
     }
 
+    @GetMapping("getuserdetailsbytoken")
+    public ResponseEntity<Object> getUserDetailsByToken(@RequestHeader String token, @RequestHeader String role)
+    {
+        return userService.getUserDetailsByEmailService(token,role);
+    }
+
     @GetMapping("login")
     public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel,@RequestHeader String role) {
         return userService.userLoginService(loginModel,role);
