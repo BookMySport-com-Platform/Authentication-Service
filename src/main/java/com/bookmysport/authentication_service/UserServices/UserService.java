@@ -109,7 +109,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<Object> userRegisterService(Object userOrService, BindingResult bindingResult, int l) {
+    public ResponseEntity<Object> userRegisterService(Object userOrService, BindingResult bindingResult, String role) {
         try {
             if (!bindingResult.hasErrors()) {
                 if (bindingResult.hasFieldErrors()) {
@@ -118,7 +118,7 @@ public class UserService {
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
 
-                if (l == 4) {
+                if (role.equals("user")) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     UserModel userModel = objectMapper.convertValue(userOrService, UserModel.class);
                     System.out.println(userModel.getClass().getName());
@@ -138,7 +138,7 @@ public class UserService {
                     }
                 }
 
-                else if (l == 5) {
+                else if (role.equals("serviceprovider")) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     ServiceProviderModel serviceProviderModel = objectMapper.convertValue(userOrService,
                             ServiceProviderModel.class);

@@ -23,8 +23,8 @@ public class MainController {
     private UserService userService;
 
     @PostMapping("adduser")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader int l) {
-        return userService.userRegisterService(userOrService, bindingResult,l);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader String role) {
+        return userService.userRegisterService(userOrService, bindingResult,role);
     }
 
     @GetMapping("getuserdetailsbytoken")
