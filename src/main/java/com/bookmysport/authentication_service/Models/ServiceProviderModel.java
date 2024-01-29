@@ -49,4 +49,7 @@ public class ServiceProviderModel {
     @NotNull
     private String centreName;
 
+    private int startTime;
+
+    private int stopTime;
 }
