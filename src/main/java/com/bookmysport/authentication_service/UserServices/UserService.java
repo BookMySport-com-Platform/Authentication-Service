@@ -115,13 +115,12 @@ public class UserService {
                 if (bindingResult.hasFieldErrors()) {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Enter valid Email");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
 
                 if (role.equals("user")) {
                     ObjectMapper objectMapper = new ObjectMapper();
                     UserModel userModel = objectMapper.convertValue(userOrService, UserModel.class);
-                    System.out.println(userModel.getClass().getName());
                     UserModel userByEmail = userRepository.findByEmail(userModel.getEmail());
                     if (userByEmail == null) {
                         userModel.setPassword(hashPassword(userModel.getPassword()));
@@ -173,7 +172,6 @@ public class UserService {
                 return ResponseEntity.badRequest().body(responseMessage);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error!");
         }
@@ -370,7 +368,6 @@ public class UserService {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
         }
     }
