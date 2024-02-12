@@ -129,7 +129,7 @@ public class UserService {
                         responseMessage.setSuccess(true);
                         responseMessage.setMessage("Account Created Successfully!");
                         responseMessage.setToken(authService.generateToken(userModel.getEmail()));
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     } else {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("User with this email already exists!");
@@ -151,7 +151,7 @@ public class UserService {
                         responseMessage.setSuccess(true);
                         responseMessage.setMessage("Account Created Successfully!");
                         responseMessage.setToken(authService.generateToken(serviceProviderModel.getEmail()));
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     } else {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("User with this email already exists!");
