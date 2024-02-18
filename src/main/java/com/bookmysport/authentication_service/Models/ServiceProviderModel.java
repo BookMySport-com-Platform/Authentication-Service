@@ -38,7 +38,7 @@ public class ServiceProviderModel {
 
     @NotNull
     @NumberFormat(pattern = "Enter a number")
-    private int phoneNumber;
+    private long phoneNumber;
 
     @NotNull
     private String password;
