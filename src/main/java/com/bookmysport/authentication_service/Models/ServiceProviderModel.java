@@ -40,16 +40,15 @@ public class ServiceProviderModel {
     @NumberFormat(pattern = "Enter a number")
     private long phoneNumber;
 
-    @NotNull
     private String password;
 
-    @NotNull
     private String address;
 
-    @NotNull
     private String centreName;
 
     private int startTime;
 
     private int stopTime;
+
+    private boolean signInWithGoogle;
 }

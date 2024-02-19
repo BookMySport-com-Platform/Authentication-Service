@@ -347,8 +347,6 @@ public class UserService {
             if (role.equals("user")) {
                 UserModel user = userRepository.findByEmail(email);
                 if (user != null) {
-                    // responseMessage.setSuccess(true);
-                    // responseMessage.setMessage(user);
                     return ResponseEntity.ok(user);
                 } else {
                     responseMessage.setSuccess(false);
@@ -358,8 +356,6 @@ public class UserService {
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
                 if (serviceProvider != null) {
-                    // responseMessage.setSuccess(true);
-                    // responseMessage.setMessage(serviceProvider);
                     return ResponseEntity.ok(serviceProvider);
                 } else {
                     responseMessage.setSuccess(false);

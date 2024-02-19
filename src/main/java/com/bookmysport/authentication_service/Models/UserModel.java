@@ -13,7 +13,7 @@ import lombok.Data;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.NumberFormat;
+// import org.springframework.format.annotation.NumberFormat;
 import org.springframework.stereotype.Component;
 
 @Entity
@@ -36,11 +36,19 @@ public class UserModel {
     @Email(message = "Enter a valid email")
     private String email;
 
-    @NotNull
-    @NumberFormat(pattern = "Enter a number")
     private long phoneNumber;
 
-    @NotNull
+    private boolean signInWithGoogle;
+
     private String password;
+
+    public void setPassword(String password, boolean signInWithGoogle) {
+        if (signInWithGoogle) {
+            this.password = null;
+        } else {
+            this.password = password;
+        }
+        this.signInWithGoogle = signInWithGoogle;
+    }
 
 }
