@@ -1,5 +1,9 @@
 package com.bookmysport.authentication_service.Controllers;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
 import com.bookmysport.authentication_service.Models.ServiceProviderModel;
+import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
+import com.bookmysport.authentication_service.SearchFunction.SearchByAddressAndCentreName;
 import com.bookmysport.authentication_service.UserServices.ArenaDetailsUpdateService;
 import com.bookmysport.authentication_service.UserServices.UserService;
 
@@ -28,6 +34,12 @@ public class MainController {
 
     @Autowired
     private ArenaDetailsUpdateService arenaDetailsUpdateService;
+
+    @Autowired
+    private SearchByAddressAndCentreName searchByAddressAndCentreName;
+
+    @Autowired
+    private ServiceProviderRepository serviceProviderRepository;
 
     @PostMapping("adduser")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader String role) {
@@ -69,6 +81,18 @@ public class MainController {
     public ResponseEntity<ResponseMessage> updateArenaDetails(@RequestHeader String token,@RequestBody ServiceProviderModel latestDetails)
     {
         return arenaDetailsUpdateService.playGroundDetailsUpdateService(token, latestDetails);
+    }
+
+    @GetMapping("searchbyaddressandcentrename")
+    public List<ServiceProviderModel> searchFunction(@RequestHeader String searchItem)
+    {
+        return searchByAddressAndCentreName.searchByAddressAndCentreNameService(searchItem);
+    }
+
+    @GetMapping("getdetailsbyspid")
+    public Optional<ServiceProviderModel> getDetailsBySpId(@RequestHeader String spId)
+    {
+        return serviceProviderRepository.findById(UUID.fromString(spId));
     }
 
 }
