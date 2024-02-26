@@ -24,10 +24,7 @@ public class ArenaDetailsUpdateService {
     public ResponseEntity<ResponseMessage> playGroundDetailsUpdateService(String token, ServiceProviderModel latestDetails) {
         try {
             String email = authService.verifyToken(token);
-            System.out.println(email);
             ServiceProviderModel updateToBeDone = serviceProviderRepository.findByEmail(email);
-            System.out.println(updateToBeDone);
-
             if (updateToBeDone == null) {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Service provider with this email: " + email + " doesn't exist");

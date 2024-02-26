@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
 import com.bookmysport.authentication_service.Models.ServiceProviderModel;
+import com.bookmysport.authentication_service.RatingService.PlaygroundRating;
 import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
 import com.bookmysport.authentication_service.SearchFunction.SearchByAddressAndCentreName;
 import com.bookmysport.authentication_service.UserServices.ArenaDetailsUpdateService;
@@ -40,6 +41,9 @@ public class MainController {
 
     @Autowired
     private ServiceProviderRepository serviceProviderRepository;
+
+    @Autowired
+    private PlaygroundRating playgroundRating;
 
     @PostMapping("adduser")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader String role) {
@@ -94,5 +98,12 @@ public class MainController {
     {
         return serviceProviderRepository.findById(UUID.fromString(spId));
     }
+
+    @PostMapping("addrating")
+    public ResponseEntity<ResponseMessage> rating(@RequestHeader String spId,@RequestHeader float rating)
+    {
+        return playgroundRating.playgroundRatingService(spId, rating);
+    }
+
 
 }
