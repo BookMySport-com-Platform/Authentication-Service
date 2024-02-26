@@ -52,4 +52,10 @@ public class ServiceProviderModel {
     private int startTime;
 
     private int stopTime;
+
+    private double rating;
+
+    private int numberOfRatings;
+
+    private float ratingSum;
 }
