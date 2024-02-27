@@ -35,7 +35,7 @@ public class PlaygroundRating {
                     ServiceProviderModel serviceProvider = serviceProviderOptional.get();
 
                     if (serviceProvider.getNumberOfRatings() == 0) {
-                        serviceProvider.setRating(rating);
+                        serviceProvider.setRating(Math.round(rating * 10.0) / 10.0);
                         serviceProvider.setRatingSum(rating);
                         serviceProvider.setNumberOfRatings(1);
                     } else {
