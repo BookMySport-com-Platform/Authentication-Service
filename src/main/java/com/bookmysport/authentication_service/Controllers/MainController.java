@@ -1,6 +1,7 @@
 package com.bookmysport.authentication_service.Controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
@@ -21,6 +24,8 @@ import com.bookmysport.authentication_service.Models.ServiceProviderModel;
 import com.bookmysport.authentication_service.RatingService.PlaygroundRating;
 import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
 import com.bookmysport.authentication_service.SearchFunction.SearchByAddressAndCentreName;
+import com.bookmysport.authentication_service.Services.AvatarUploadService;
+import com.bookmysport.authentication_service.Services.FetchAvatars;
 import com.bookmysport.authentication_service.UserServices.ArenaDetailsUpdateService;
 import com.bookmysport.authentication_service.UserServices.UserService;
 
@@ -45,25 +50,31 @@ public class MainController {
     @Autowired
     private PlaygroundRating playgroundRating;
 
+    @Autowired
+    private AvatarUploadService avatarUploadService;
+
+    @Autowired
+    private FetchAvatars fetchAvatars;
+
     @PostMapping("adduser")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,@RequestHeader String role) {
-        return userService.userRegisterService(userOrService, bindingResult,role);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,
+            @RequestHeader String role) {
+        return userService.userRegisterService(userOrService, bindingResult, role);
     }
 
     @GetMapping("getuserdetailsbytoken")
-    public ResponseEntity<Object> getUserDetailsByToken(@RequestHeader String token, @RequestHeader String role)
-    {
-        return userService.getUserDetailsByEmailService(token,role);
+    public ResponseEntity<Object> getUserDetailsByToken(@RequestHeader String token, @RequestHeader String role) {
+        return userService.getUserDetailsByEmailService(token, role);
     }
 
     @GetMapping("login")
-    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel,@RequestHeader String role) {
-        return userService.userLoginService(loginModel,role);
+    public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel, @RequestHeader String role) {
+        return userService.userLoginService(loginModel, role);
     }
 
     @PostMapping("2fa")
     public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser, @RequestHeader String role) {
-        return userService.TwoFAService(otpforTwoFAFromUser,role);
+        return userService.TwoFAService(otpforTwoFAFromUser, role);
     }
 
     @PostMapping("forgotpassword")
@@ -77,33 +88,40 @@ public class MainController {
     }
 
     @PostMapping("resetpassword")
-    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser,@RequestHeader String role) {
-        return userService.resetThePasswordService(passwordFromUser,role);
+    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser, @RequestHeader String role) {
+        return userService.resetThePasswordService(passwordFromUser, role);
     }
 
     @PutMapping("updateplaygrounddetails")
-    public ResponseEntity<ResponseMessage> updateArenaDetails(@RequestHeader String token,@RequestBody ServiceProviderModel latestDetails)
-    {
+    public ResponseEntity<ResponseMessage> updateArenaDetails(@RequestHeader String token,
+            @RequestBody ServiceProviderModel latestDetails) {
         return arenaDetailsUpdateService.playGroundDetailsUpdateService(token, latestDetails);
     }
 
     @GetMapping("searchbyaddressandcentrename")
-    public List<ServiceProviderModel> searchFunction(@RequestHeader String searchItem)
-    {
+    public List<ServiceProviderModel> searchFunction(@RequestHeader String searchItem) {
         return searchByAddressAndCentreName.searchByAddressAndCentreNameService(searchItem);
     }
 
     @GetMapping("getdetailsbyspid")
-    public Optional<ServiceProviderModel> getDetailsBySpId(@RequestHeader String spId)
-    {
+    public Optional<ServiceProviderModel> getDetailsBySpId(@RequestHeader String spId) {
         return serviceProviderRepository.findById(UUID.fromString(spId));
     }
 
     @PostMapping("addrating")
-    public ResponseEntity<ResponseMessage> rating(@RequestHeader String spId,@RequestHeader float rating)
-    {
+    public ResponseEntity<ResponseMessage> rating(@RequestHeader String spId, @RequestHeader float rating) {
         return playgroundRating.playgroundRatingService(spId, rating);
     }
 
+    @PostMapping("uploadavatar")
+    public ResponseEntity<ResponseMessage> avatarUpload(@RequestHeader String token, @RequestHeader String role,
+            @RequestParam("avatar") MultipartFile avatar) {
+        return avatarUploadService.avatarUploadService(token, role, avatar);
+    }
+
+    @GetMapping("getavatar")
+    public ResponseEntity<Map<String, Object>> getAvatar(@RequestHeader String token, @RequestHeader String role) {
+        return fetchAvatars.fetchAvatarService(token, role);
+    }
 
 }
