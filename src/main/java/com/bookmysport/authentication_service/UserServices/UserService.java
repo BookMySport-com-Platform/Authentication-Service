@@ -122,8 +122,9 @@ public class UserService {
                     ObjectMapper objectMapper = new ObjectMapper();
                     UserModel userModel = objectMapper.convertValue(userOrService, UserModel.class);
                     UserModel userByEmail = userRepository.findByEmail(userModel.getEmail());
-                    ServiceProviderModel serviceproviderByEmail=serviceProviderRepository.findByEmail(userModel.getEmail());
-                    if (userByEmail == null & serviceproviderByEmail==null) {
+                    ServiceProviderModel serviceproviderByEmail = serviceProviderRepository
+                            .findByEmail(userModel.getEmail());
+                    if (userByEmail == null & serviceproviderByEmail == null) {
                         userModel.setPassword(hashPassword(userModel.getPassword()));
                         userRepository.save(userModel);
                         responseMessage.setSuccess(true);
