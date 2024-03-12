@@ -37,7 +37,6 @@ public class FetchAvatars {
             String email = authService.verifyToken(token);
             if (role.equals("user")) {
                 UserModel user = userRepository.findByEmail(email);
-                System.out.println(user);
                 if (user != null) {
                     Map<String, Object> response = new HashMap<>();
                     AvatarModel avatar = avatarUploadRepository.findByUserId(user.getId());
