@@ -10,6 +10,7 @@ import com.bookmysport.authentication_service.Models.EmailModel;
 
 @Service
 public class EmailService {
+    
     @Autowired
     private JavaMailSender javaMailSender;
 
