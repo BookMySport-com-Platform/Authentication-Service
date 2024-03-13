@@ -73,23 +73,25 @@ public class MainController {
     }
 
     @PostMapping("2fa")
-    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser, @RequestHeader String role) {
-        return userService.TwoFAService(otpforTwoFAFromUser, role);
+    public ResponseEntity<Object> twofa(@RequestHeader int otpforTwoFAFromUser, @RequestHeader String email,
+            @RequestHeader String role) {
+        return userService.TwoFAService(otpforTwoFAFromUser, email, role);
     }
 
     @PostMapping("forgotpassword")
-    public ResponseEntity<Object> forgotPassword(@RequestHeader String email) {
-        return userService.forgotPasswordService(email);
+    public ResponseEntity<Object> forgotPassword(@RequestHeader String email, @RequestHeader String role) {
+        return userService.forgotPasswordService(email, role);
     }
 
     @PostMapping("verifyOtpforforgotpassword")
-    public ResponseEntity<Object> verifyTheUserOtp(@RequestHeader String otp) {
-        return userService.verifyTheOtpEnteredByUser(otp);
+    public ResponseEntity<Object> verifyTheUserOtp(@RequestHeader int otp, @RequestHeader String email) {
+        return userService.verifyTheOtpEnteredByUser(otp, email);
     }
 
     @PostMapping("resetpassword")
-    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser, @RequestHeader String role) {
-        return userService.resetThePasswordService(passwordFromUser, role);
+    public ResponseEntity<Object> resetThePassword(@RequestHeader String passwordFromUser, @RequestHeader String role,
+            @RequestHeader String email) {
+        return userService.resetThePasswordService(passwordFromUser, role, email);
     }
 
     @PutMapping("updateplaygrounddetails")
