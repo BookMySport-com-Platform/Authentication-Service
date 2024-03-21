@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import com.bookmysport.authentication_service.Models.EmailModel;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.OTPModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
@@ -40,9 +39,6 @@ public class UserService {
     private AuthService authService;
 
     @Autowired
-    private EmailModel emailModel;
-
-    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -56,7 +52,7 @@ public class UserService {
 
     @Scheduled(fixedRate = 60000)
     public void deleteExpiredRecords() {
-        LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(1).truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.MINUTES);
         List<OTPModel> expiredRecords = otpRepo.findByCreatedAt(expiryTime);
         if (expiredRecords.size() != 0) {
             otpRepo.deleteAll(expiredRecords);
@@ -73,12 +69,9 @@ public class UserService {
             otp.setUseCase("login");
             otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
-            emailModel.setRecipient(userModel.getEmail());
-            emailModel.setSubject("OTP for Two-Factor Authentication");
-            emailModel.setMsgBody("Your OTP for Two-Factor Authentication is " + otpForTwoFA
-                    + ". It is valid only for 5 minutes.");
-
-            String response = emailService.sendSimpleMail(emailModel);
+            String response = emailService.sendSimpleMail(userModel.getEmail(),
+                    "Your OTP for Two-Factor Authentication is " + otpForTwoFA + " . It is valid only for 5 minutes.",
+                    "OTP for Two-Factor Authentication");
             otpRepo.save(otp);
             responseMessage.setSuccess(true);
             responseMessage.setMessage(response);
@@ -98,12 +91,9 @@ public class UserService {
             otp.setUseCase("login");
             otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
-            emailModel.setRecipient(serviceProviderModel.getEmail());
-            emailModel.setSubject("OTP for Two-Factor Authentication");
-            emailModel.setMsgBody("Your OTP for Two-Factor Authentication is " + otpForTwoFA
-                    + ". It is valid only for 5 minutes.");
-
-            String response = emailService.sendSimpleMail(emailModel);
+            String response = emailService.sendSimpleMail(serviceProviderModel.getEmail(),
+                    "Your OTP for Two-Factor Authentication is " + otpForTwoFA + " . It is valid only for 5 minutes.",
+                    "OTP for Two-Factor Authentication");
             responseMessage.setSuccess(true);
             responseMessage.setMessage(response);
             otpRepo.save(otp);
@@ -147,10 +137,11 @@ public class UserService {
                     ObjectMapper objectMapper = new ObjectMapper();
                     ServiceProviderModel serviceProviderModel = objectMapper.convertValue(userOrService,
                             ServiceProviderModel.class);
+                    UserModel userByEmail = userRepository.findByEmail(serviceProviderModel.getEmail());
                     ServiceProviderModel serviceProvierByEmail = serviceProviderRepository
                             .findByEmail(serviceProviderModel.getEmail());
 
-                    if (serviceProvierByEmail == null) {
+                    if (serviceProvierByEmail == null & userByEmail == null) {
                         serviceProviderModel.setPassword(hashPassword(serviceProviderModel.getPassword()));
                         serviceProviderRepository.save(serviceProviderModel);
                         responseMessage.setSuccess(true);
@@ -247,6 +238,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid OTP.");
+                    responseMessage.setToken(null);
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
             } else {
@@ -258,6 +250,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid OTP.");
+                    responseMessage.setToken(null);
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
             }
@@ -285,14 +278,13 @@ public class UserService {
 
                     otpRepo.save(otpForForgotPassword);
 
-                    emailModel.setRecipient(email);
-                    emailModel.setSubject("OTP for Resetting your password");
-                    emailModel.setMsgBody("Your OTP for resetting your password is " + otp
-                            + ". It is valid only for 5 minutes.");
-
-                    String response = emailService.sendSimpleMail(emailModel);
+                    String response = emailService.sendSimpleMail(email,
+                            "Your OTP for resetting your password is " + Integer.toString(otp)
+                                    + ". It is valid only for 5 minutes.",
+                            "OTP for Resetting your password");
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage(response);
+                    responseMessage.setToken(null);
                     return ResponseEntity.ok().body(responseMessage);
                 } else {
                     responseMessage.setSuccess(false);
@@ -309,14 +301,13 @@ public class UserService {
                     otpForForgotPassword.setUseCase("forgotpassword");
                     otpForForgotPassword.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
-                    emailModel.setRecipient(email);
-                    emailModel.setSubject("OTP for Resetting your password");
-                    emailModel.setMsgBody("Your OTP for resetting your password is " + Integer.toString(otp)
-                            + ". It is valid only for 5 minutes.");
-
-                    String response = emailService.sendSimpleMail(emailModel);
+                    String response = emailService.sendSimpleMail(email,
+                            "Your OTP for resetting your password is " + Integer.toString(otp)
+                                    + ". It is valid only for 5 minutes.",
+                            "OTP for Resetting your password");
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage(response);
+                    responseMessage.setToken(null);
                     return ResponseEntity.ok().body(responseMessage);
                 } else {
                     responseMessage.setSuccess(false);
@@ -340,10 +331,12 @@ public class UserService {
             if (otpFromDB.getOtp() == otpFromUser) {
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage("OTP Verified");
+                responseMessage.setToken(null);
                 return ResponseEntity.ok().body(responseMessage);
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Invalid OTP, check your registered Email to get the 6-digit OTP");
+                responseMessage.setToken(null);
                 return ResponseEntity.badRequest().body(responseMessage);
             }
         } catch (Exception e) {
@@ -353,7 +346,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<Object> resetThePasswordService(String passwordFromUser, String role,String email) {
+    public ResponseEntity<Object> resetThePasswordService(String passwordFromUser, String role, String email) {
         try {
             if (role.equals("user")) {
                 UserModel user = userRepository.findByEmail(email);
@@ -362,6 +355,7 @@ public class UserService {
 
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage("Password Changed Successfully");
+                responseMessage.setToken(null);
                 return ResponseEntity.ok().body(responseMessage);
             } else {
                 ServiceProviderModel serviceProviderModel = serviceProviderRepository
@@ -371,6 +365,7 @@ public class UserService {
 
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage("Password Changed Successfully");
+                responseMessage.setToken(null);
                 return ResponseEntity.ok().body(responseMessage);
             }
 
@@ -389,6 +384,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
+                    responseMessage.setToken(null);
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
             } else {
@@ -398,6 +394,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
+                    responseMessage.setToken(null);
                     return ResponseEntity.badRequest().body(responseMessage);
                 }
             }

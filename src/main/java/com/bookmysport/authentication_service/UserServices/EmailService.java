@@ -6,8 +6,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.bookmysport.authentication_service.Models.EmailModel;
-
 @Service
 public class EmailService {
     
@@ -17,18 +15,18 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public String sendSimpleMail(EmailModel details) {
+    public String sendSimpleMail(String to,String text,String subject) {
 
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
 
             mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setText(details.getMsgBody());
-            mailMessage.setSubject(details.getSubject());
+            mailMessage.setTo(to);
+            mailMessage.setText(text);
+            mailMessage.setSubject(subject);
 
             javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully to " + details.getRecipient();
+            return "Mail Sent Successfully to " + to;
         }
 
         catch (Exception e) {
