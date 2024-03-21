@@ -61,21 +61,32 @@ public class UserService {
 
     public ResponseEntity<Object> generateOTPforTwoFAService(UserModel userModel) {
         try {
-            int otpForTwoFA = OTPGenerator.generateRandom6DigitNumber();
-            OTPModel otp = new OTPModel();
 
-            otp.setEmail(userModel.getEmail());
-            otp.setOtp(otpForTwoFA);
-            otp.setUseCase("login");
-            otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+            if (otpRepo.findByEmail(userModel.getEmail()) == null) {
+                int otpForTwoFA = OTPGenerator.generateRandom6DigitNumber();
+                OTPModel otp = new OTPModel();
 
-            String response = emailService.sendSimpleMail(userModel.getEmail(),
-                    "Your OTP for Two-Factor Authentication is " + otpForTwoFA + " . It is valid only for 5 minutes.",
-                    "OTP for Two-Factor Authentication");
-            otpRepo.save(otp);
-            responseMessage.setSuccess(true);
-            responseMessage.setMessage(response);
-            return ResponseEntity.ok().body(responseMessage);
+                otp.setEmail(userModel.getEmail());
+                otp.setOtp(otpForTwoFA);
+                otp.setUseCase("login");
+                otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+
+                String response = emailService.sendSimpleMail(userModel.getEmail(),
+                        "Your OTP for Two-Factor Authentication is " + otpForTwoFA
+                                + " . It is valid only for 5 minutes.",
+                        "OTP for Two-Factor Authentication");
+                otpRepo.save(otp);
+                responseMessage.setSuccess(true);
+                responseMessage.setMessage(response);
+                responseMessage.setToken(null);
+                return ResponseEntity.ok().body(responseMessage);
+            } else {
+                responseMessage.setSuccess(false);
+                responseMessage.setMessage("OTP already exists");
+                responseMessage.setToken(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
         }
