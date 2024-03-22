@@ -94,21 +94,30 @@ public class UserService {
 
     public ResponseEntity<Object> generateOTPforTwoFAServiceProviderService(ServiceProviderModel serviceProviderModel) {
         try {
-            int otpForTwoFA = OTPGenerator.generateRandom6DigitNumber();
-            OTPModel otp = new OTPModel();
+            if (otpRepo.findByEmail(serviceProviderModel.getEmail()) == null) {
+                int otpForTwoFA = OTPGenerator.generateRandom6DigitNumber();
+                OTPModel otp = new OTPModel();
 
-            otp.setEmail(serviceProviderModel.getEmail());
-            otp.setOtp(otpForTwoFA);
-            otp.setUseCase("login");
-            otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+                otp.setEmail(serviceProviderModel.getEmail());
+                otp.setOtp(otpForTwoFA);
+                otp.setUseCase("login");
+                otp.setCreatedAt(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
-            String response = emailService.sendSimpleMail(serviceProviderModel.getEmail(),
-                    "Your OTP for Two-Factor Authentication is " + otpForTwoFA + " . It is valid only for 5 minutes.",
-                    "OTP for Two-Factor Authentication");
-            responseMessage.setSuccess(true);
-            responseMessage.setMessage(response);
-            otpRepo.save(otp);
-            return ResponseEntity.ok().body(responseMessage);
+                String response = emailService.sendSimpleMail(serviceProviderModel.getEmail(),
+                        "Your OTP for Two-Factor Authentication is " + otpForTwoFA
+                                + " . It is valid only for 5 minutes.",
+                        "OTP for Two-Factor Authentication");
+                responseMessage.setSuccess(true);
+                responseMessage.setMessage(response);
+                otpRepo.save(otp);
+                return ResponseEntity.ok().body(responseMessage);
+            } else {
+                responseMessage.setSuccess(false);
+                responseMessage.setMessage("OTP already exists");
+                responseMessage.setToken(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseMessage);
+            }
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
         }
