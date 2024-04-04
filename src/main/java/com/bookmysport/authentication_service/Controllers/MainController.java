@@ -69,7 +69,7 @@ public class MainController {
         return userService.getUserDetailsByEmailService(token, role);
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     public ResponseEntity<Object> verifyUser(@RequestBody LoginModel loginModel, @RequestHeader String role) {
         return userService.userLoginService(loginModel, role);
     }

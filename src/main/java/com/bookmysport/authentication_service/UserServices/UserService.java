@@ -209,7 +209,7 @@ public class UserService {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("Invalid email or password");
                         responseMessage.setToken(null);
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     }
                 } else {
                     responseMessage.setSuccess(false);
