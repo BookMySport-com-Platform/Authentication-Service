@@ -149,7 +149,7 @@ public class UserService {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("User with this email already exists!");
                         responseMessage.setToken(null);
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     }
                 }
 
@@ -172,7 +172,7 @@ public class UserService {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("User with this email already exists!");
                         responseMessage.setToken(null);
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     }
                 }
 
@@ -190,7 +190,7 @@ public class UserService {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Internal Server Error!");
+                    .body("Internal Server Error!"+e.getMessage());
         }
     }
 
