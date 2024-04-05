@@ -52,7 +52,7 @@ public class UserService {
 
     @Scheduled(fixedRate = 60000)
     public void deleteExpiredRecords() {
-        LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(2).truncatedTo(ChronoUnit.MINUTES);
         List<OTPModel> expiredRecords = otpRepo.findByCreatedAt(expiryTime);
         if (expiredRecords.size() != 0) {
             otpRepo.deleteAll(expiredRecords);
@@ -190,7 +190,7 @@ public class UserService {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Internal Server Error!"+e.getMessage());
+                    .body("Internal Server Error!" + e.getMessage());
         }
     }
 
@@ -259,7 +259,7 @@ public class UserService {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid OTP.");
                     responseMessage.setToken(null);
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
                 if (otpFromDB == otpforTwoFAFromUser) {
@@ -271,7 +271,7 @@ public class UserService {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid OTP.");
                     responseMessage.setToken(null);
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             }
 
@@ -309,7 +309,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid Email");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else if (role.equals("serviceprovider")) {
                 ServiceProviderModel spByEmail = serviceProviderRepository.findByEmail(email);
@@ -332,7 +332,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid Email");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
                 responseMessage.setSuccess(false);
@@ -357,7 +357,7 @@ public class UserService {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Invalid OTP, check your registered Email to get the 6-digit OTP");
                 responseMessage.setToken(null);
-                return ResponseEntity.badRequest().body(responseMessage);
+                return ResponseEntity.ok().body(responseMessage);
             }
         } catch (Exception e) {
             responseMessage.setSuccess(false);
