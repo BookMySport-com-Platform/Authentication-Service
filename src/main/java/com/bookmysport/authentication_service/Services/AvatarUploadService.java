@@ -64,13 +64,13 @@ public class AvatarUploadService {
                     } else {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("Error occured in avatarUploadService method");
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                     }
 
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
@@ -94,12 +94,12 @@ public class AvatarUploadService {
                     } else {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("Error occured in avatarUploadService method");
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
+                        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
                     }
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             }
         } catch (Exception e) {

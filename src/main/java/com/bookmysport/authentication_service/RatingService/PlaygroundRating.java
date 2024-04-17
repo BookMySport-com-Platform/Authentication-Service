@@ -54,7 +54,7 @@ public class PlaygroundRating {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid SpID");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
 
                 return ResponseEntity.status(HttpStatus.OK).body(responseMessage);

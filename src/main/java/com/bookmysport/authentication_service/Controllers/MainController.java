@@ -128,4 +128,10 @@ public class MainController {
         return fetchAvatars.fetchAvatarService(token, role);
     }
 
+    @GetMapping("getallarenas")
+    public List<ServiceProviderModel> getAllArenas()
+    {
+        return serviceProviderRepository.findAll();
+    }
+
 }

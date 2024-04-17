@@ -72,7 +72,7 @@ public class S3PutObjectService {
         } catch (Exception e) {
             responseMessage.setSuccess(false);
             responseMessage.setMessage("Internal Server Error " + e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.ok().body(responseMessage);
         }
     }
 
@@ -115,7 +115,7 @@ public class S3PutObjectService {
                     "Object " + avatarFolderName + userId + '/' + key + " insertion falied " + e.getMessage());
 
             responseMessage.setToken(null);
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.ok().body(responseMessage);
         }
     }
 }

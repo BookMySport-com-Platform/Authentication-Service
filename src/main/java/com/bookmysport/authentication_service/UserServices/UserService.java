@@ -180,13 +180,13 @@ public class UserService {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid Input!");
                     responseMessage.setToken(null);
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
 
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Invalid user name or email");
-                return ResponseEntity.badRequest().body(responseMessage);
+                return ResponseEntity.ok().body(responseMessage);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -214,7 +214,7 @@ public class UserService {
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email or password");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
                 ServiceProviderModel serviceProviderModel = serviceProviderRepository
@@ -231,12 +231,12 @@ public class UserService {
                         responseMessage.setSuccess(false);
                         responseMessage.setMessage("Invalid email or password");
                         responseMessage.setToken(null);
-                        return ResponseEntity.badRequest().body(responseMessage);
+                        return ResponseEntity.ok().body(responseMessage);
                     }
                 } else {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email or password");
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             }
 
@@ -337,7 +337,7 @@ public class UserService {
             } else {
                 responseMessage.setSuccess(false);
                 responseMessage.setMessage("Invalid role");
-                return ResponseEntity.badRequest().body(responseMessage);
+                return ResponseEntity.ok().body(responseMessage);
             }
 
         } catch (Exception e) {
@@ -405,7 +405,7 @@ public class UserService {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
                     responseMessage.setToken(null);
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
@@ -415,7 +415,7 @@ public class UserService {
                     responseMessage.setSuccess(false);
                     responseMessage.setMessage("Invalid email");
                     responseMessage.setToken(null);
-                    return ResponseEntity.badRequest().body(responseMessage);
+                    return ResponseEntity.ok().body(responseMessage);
                 }
             }
 

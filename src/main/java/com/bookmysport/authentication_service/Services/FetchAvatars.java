@@ -48,7 +48,7 @@ public class FetchAvatars {
                     Map<String, Object> response = new HashMap<>();
                     response.put("success", false);
                     response.put("avatar", "Invalid Email");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
@@ -64,7 +64,7 @@ public class FetchAvatars {
                     Map<String, Object> response = new HashMap<>();
                     response.put("success", false);
                     response.put("avatar", "Invalid Email");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
             }
         } catch (Exception e) {
