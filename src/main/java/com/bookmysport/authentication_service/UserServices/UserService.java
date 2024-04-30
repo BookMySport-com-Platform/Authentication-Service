@@ -353,6 +353,7 @@ public class UserService {
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage("OTP Verified");
                 responseMessage.setToken(null);
+                otpRepo.deleteByEmail(email);
                 return ResponseEntity.ok().body(responseMessage);
             } else {
                 responseMessage.setSuccess(false);
