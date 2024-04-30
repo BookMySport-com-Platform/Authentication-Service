@@ -14,5 +14,7 @@ public interface OtpRepo extends JpaRepository<OTPModel,UUID>{
     OTPModel findByEmail(String email);
 
     List<OTPModel> findByCreatedAt(LocalDateTime createdAt);
+
+    void deleteByEmail(String email);
     
 }

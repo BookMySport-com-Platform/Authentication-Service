@@ -254,6 +254,7 @@ public class UserService {
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage("Login Successfully!");
                     responseMessage.setToken(authService.generateToken(email));
+                    otpRepo.deleteByEmail(email);
                     return ResponseEntity.ok().body(responseMessage);
                 } else {
                     responseMessage.setSuccess(false);
