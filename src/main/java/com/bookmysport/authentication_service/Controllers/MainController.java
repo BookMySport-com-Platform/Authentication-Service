@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bookmysport.authentication_service.Models.AvatarModel;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
 import com.bookmysport.authentication_service.Models.ServiceProviderModel;
 import com.bookmysport.authentication_service.RatingService.PlaygroundRating;
+import com.bookmysport.authentication_service.Repository.AvatarUploadRepository;
 import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
 import com.bookmysport.authentication_service.SearchFunction.SearchByAddressAndCentreName;
 import com.bookmysport.authentication_service.Services.AvatarUploadService;
@@ -57,6 +59,9 @@ public class MainController {
 
     @Autowired
     private FetchAvatars fetchAvatars;
+
+    @Autowired
+    private AvatarUploadRepository avatarUploadRepository;
 
     @PostMapping("adduser")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,
@@ -132,6 +137,12 @@ public class MainController {
     public List<ServiceProviderModel> getAllArenas()
     {
         return serviceProviderRepository.findAll();
+    }
+
+    @GetMapping("getavatarbyid")
+    public AvatarModel getAvatarById(@RequestHeader String userId)
+    {
+        return avatarUploadRepository.findByUserId(UUID.fromString(userId));
     }
 
 }

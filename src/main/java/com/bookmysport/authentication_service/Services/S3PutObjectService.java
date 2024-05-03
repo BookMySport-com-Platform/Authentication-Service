@@ -1,13 +1,18 @@
 package com.bookmysport.authentication_service.Services;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bookmysport.authentication_service.Models.AvatarModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
+import com.bookmysport.authentication_service.Repository.AvatarUploadRepository;
 import com.bookmysport.authentication_service.StaticInfo.S3Data;
 
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -25,6 +30,31 @@ public class S3PutObjectService {
 
     @Autowired
     private ResponseMessage responseMessage;
+
+    @Autowired
+    private AvatarUploadRepository avatarUploadRepository;
+
+    @SuppressWarnings("null")
+    @Scheduled(fixedRate = 86400)
+    public void deleteExpiredRecords() {
+        LocalDate expiryTime = LocalDate.now();
+
+        List<AvatarModel> imagesFromDB = avatarUploadRepository.findAll();
+        String folderName = System.getenv("USER_AVATAR_FOLDER_NAME");
+
+        for (int i = 0; i < imagesFromDB.size(); i++) {
+
+            if (imagesFromDB.get(i).getDateOfGenration().isBefore(expiryTime)) {
+                String key = folderName + '/' + imagesFromDB.get(i).getUserId() + '/'
+                        + imagesFromDB.get(i).getAvatarId();
+                ResponseEntity<ResponseMessage> newPresignedURL = preSignedURLService(key);
+                imagesFromDB.get(i).setAvatarUrl(newPresignedURL.getBody().getMessage());
+                imagesFromDB.get(i).setDateOfGenration(LocalDate.now());
+                avatarUploadRepository.save(imagesFromDB.get(i));
+            }
+
+        }
+    }
 
     public boolean checkObjectInBucket(String bucketName, String key) {
         S3Client s3Client = S3Data.s3Client;

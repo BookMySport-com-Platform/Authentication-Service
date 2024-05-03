@@ -1,5 +1,6 @@
 package com.bookmysport.authentication_service.Services;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,19 +43,24 @@ public class AvatarUploadService {
     public ResponseEntity<ResponseMessage> avatarUploadService(String token, String role, MultipartFile avatar) {
         try {
             String email = authService.verifyToken(token);
+
             if (role.equals("user")) {
                 UserModel user = userRepository.findByEmail(email);
                 if (user != null) {
 
                     UUID keyForAvatar = UUID.randomUUID();
+                    UUID key = keyForAvatar;
+                    AvatarModel avatarModel = new AvatarModel();
+                    avatarModel.setAvatarId(key);
+
                     ResponseMessage responseAfterAvatarUpload = s3PutObjectService
-                            .putObjectService(user.getId().toString(), keyForAvatar.toString(), avatar).getBody();
+                            .putObjectService(user.getId().toString(), key.toString(), avatar).getBody();
 
                     if (responseAfterAvatarUpload != null) {
-                        AvatarModel avatarModel = new AvatarModel();
 
                         avatarModel.setUserId(user.getId());
                         avatarModel.setAvatarUrl(responseAfterAvatarUpload.getMessage());
+                        avatarModel.setDateOfGenration(LocalDate.now());
 
                         avatarUploadRepository.save(avatarModel);
 
@@ -75,9 +81,9 @@ public class AvatarUploadService {
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
                 if (serviceProvider != null) {
-                    UUID keyForAvatar = UUID.randomUUID();
+                    UUID keyForAvatarForSP = UUID.randomUUID();
                     ResponseMessage responseAfterAvatarUpload = s3PutObjectService
-                            .putObjectService(serviceProvider.getId().toString(), keyForAvatar.toString(), avatar)
+                            .putObjectService(serviceProvider.getId().toString(), keyForAvatarForSP.toString(), avatar)
                             .getBody();
 
                     if (responseAfterAvatarUpload != null) {

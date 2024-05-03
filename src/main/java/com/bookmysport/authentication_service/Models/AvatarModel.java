@@ -1,13 +1,12 @@
 package com.bookmysport.authentication_service.Models;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -19,8 +18,6 @@ import lombok.Data;
 public class AvatarModel {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID avatarId;
 
     @Column(unique = true)
@@ -28,4 +25,6 @@ public class AvatarModel {
 
     @Column(length = 400)
     private String avatarUrl;
+
+    private LocalDate dateOfGenration;
 }

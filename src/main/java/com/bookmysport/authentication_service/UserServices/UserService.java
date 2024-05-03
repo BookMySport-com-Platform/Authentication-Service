@@ -248,13 +248,14 @@ public class UserService {
 
     public ResponseEntity<Object> TwoFAService(int otpforTwoFAFromUser, String email, String role) {
         try {
-            int otpFromDB = otpRepo.findByEmail(email).getOtp();
+            OTPModel otpFromDB = otpRepo.findByEmail(email);
             if (role.equals("user")) {
-                if (otpFromDB == otpforTwoFAFromUser) {
+                if (otpFromDB != null && otpFromDB.getOtp() == otpforTwoFAFromUser) {
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage("Login Successfully!");
                     responseMessage.setToken(authService.generateToken(email));
-                    otpRepo.deleteByEmail(email);
+
+                    otpRepo.delete(otpFromDB);
                     return ResponseEntity.ok().body(responseMessage);
                 } else {
                     responseMessage.setSuccess(false);
@@ -263,10 +264,11 @@ public class UserService {
                     return ResponseEntity.ok().body(responseMessage);
                 }
             } else {
-                if (otpFromDB == otpforTwoFAFromUser) {
+                if (otpFromDB.getOtp() == otpforTwoFAFromUser) {
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage("Login Successfully!");
                     responseMessage.setToken(authService.generateToken(email));
+                    otpRepo.delete(otpFromDB);
                     return ResponseEntity.ok().body(responseMessage);
                 } else {
                     responseMessage.setSuccess(false);
@@ -277,7 +279,8 @@ public class UserService {
             }
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error! Reason: " + e.getMessage());
         }
     }
 
