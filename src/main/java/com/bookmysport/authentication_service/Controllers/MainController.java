@@ -23,9 +23,11 @@ import com.bookmysport.authentication_service.Models.AvatarModel;
 import com.bookmysport.authentication_service.Models.LoginModel;
 import com.bookmysport.authentication_service.Models.ResponseMessage;
 import com.bookmysport.authentication_service.Models.ServiceProviderModel;
+import com.bookmysport.authentication_service.Models.UserModel;
 import com.bookmysport.authentication_service.RatingService.PlaygroundRating;
 import com.bookmysport.authentication_service.Repository.AvatarUploadRepository;
 import com.bookmysport.authentication_service.Repository.ServiceProviderRepository;
+import com.bookmysport.authentication_service.Repository.UserRepository;
 import com.bookmysport.authentication_service.SearchFunction.SearchByAddressAndCentreName;
 import com.bookmysport.authentication_service.Services.AvatarUploadService;
 import com.bookmysport.authentication_service.Services.FetchAvatars;
@@ -62,6 +64,9 @@ public class MainController {
 
     @Autowired
     private AvatarUploadRepository avatarUploadRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("adduser")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Object userOrService, BindingResult bindingResult,
@@ -143,6 +148,12 @@ public class MainController {
     public AvatarModel getAvatarById(@RequestHeader String userId)
     {
         return avatarUploadRepository.findByUserId(UUID.fromString(userId));
+    }
+
+    @GetMapping("getuserdetailsbyuserid")
+    public UserModel getUserDetailsById(@RequestHeader String userId)
+    {
+        return userRepository.findById(UUID.fromString(userId)).get();
     }
 
 }
