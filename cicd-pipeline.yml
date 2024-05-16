@@ -17,7 +17,7 @@ phases:
       - echo 'Check kubectl version'
       - kubectl version --client
       - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - sudo apt install unzip
+      - sudo apt-get install unzip
       - unzip awscliv2.zip
       - sudo ./aws/install
 
