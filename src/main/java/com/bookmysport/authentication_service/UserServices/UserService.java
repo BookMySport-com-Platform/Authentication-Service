@@ -74,7 +74,7 @@ public class UserService {
                 String response = emailService.sendSimpleMail(userModel.getEmail(),
                         "Your OTP for Two-Factor Authentication is " + otpForTwoFA
                                 + " . It is valid only for 2 minutes.",
-                        "OTP for Two-Factor Authentication");
+                        "OTP for Two-Factor Authentication valid for 2 minutes");
                 otpRepo.save(otp);
                 responseMessage.setSuccess(true);
                 responseMessage.setMessage(response);
