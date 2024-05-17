@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
         - name: auth
-          image: 471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private:latest
+          image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           ports:
-            - containerPort: 8090
+            - containerPort: $PORT
           env:
             - name: DATABASE_URL
               valueFrom:
