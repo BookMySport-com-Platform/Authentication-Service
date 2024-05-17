@@ -32,7 +32,7 @@ phases:
       - kubectl get svc
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 471112650922.dkr.ecr.ap-south-1.amazonaws.com
-      - REPOSITORY_URI=471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private:latest
+      - REPOSITORY_URI=471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private
       - docker pull $REPOSITORY_URI:$IMAGE_TAG
       
 
