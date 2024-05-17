@@ -327,7 +327,7 @@ public class UserService {
 
                     String response = emailService.sendSimpleMail(email,
                             "Your OTP for resetting your password is " + Integer.toString(otp)
-                                    + ". It is valid only for 5 minutes.",
+                                    + ". It is valid only for 2 minutes.",
                             "OTP for Resetting your password");
                     responseMessage.setSuccess(true);
                     responseMessage.setMessage(response);
