@@ -26,7 +26,7 @@ phases:
       - echo check config 
       - kubectl config view --minify
       - echo Checking aws credentials
-      - cat ~/.aws/credentials
+      - aws configure
       - echo check kubectl access
       - kubectl get svc
       - echo Logging in to Amazon ECR...
