@@ -52,5 +52,6 @@ phases:
       - kubectl apply -f auth-config.yml
       - kubectl apply -f auth-secret.yml
       - kubectl apply -f authentication-service.yml
+      - lubectl apply -f auth-service.yml
       - kubectl rollout restart -f authentication-service.yml
       - echo Deployed successfully

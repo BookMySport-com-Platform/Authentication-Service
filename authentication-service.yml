@@ -70,16 +70,4 @@ spec:
                 secretKeyRef:
                   name: auth-secret
                   key: aws-secret-key
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: auth-service
-spec:
-  type: LoadBalancer
-  selector:
-    app: auth
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8090
+
