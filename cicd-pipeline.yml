@@ -25,6 +25,8 @@ phases:
       - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $AWS_CLUSTER_NAME
       - echo check config 
       - kubectl config view --minify
+      - echo Checking aws credentials
+      - cat ~/.aws/credentials
       - echo check kubectl access
       - kubectl get svc
       - echo Logging in to Amazon ECR...
