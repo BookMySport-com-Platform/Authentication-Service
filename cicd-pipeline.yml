@@ -16,7 +16,7 @@ phases:
       - source ~/.bashrc
       - echo 'Check kubectl version'
       - kubectl version --client
-      - echo "AWS Version Check successfull"
+      - echo "AWS Version Check successfully"
       - aws --version
 
   pre_build:
