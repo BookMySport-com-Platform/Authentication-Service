@@ -18,7 +18,7 @@ spec:
         - name: auth
           image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
           ports:
-            - containerPort: $PORT
+            - containerPort: 8090
           env:
             - name: DATABASE_URL
               valueFrom:
