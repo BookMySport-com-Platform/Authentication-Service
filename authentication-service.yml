@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+          image: 471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private:latest
           ports:
             - containerPort: 8090
           env:
