@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-service-deployment
+  labels:
+    app: auth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: 471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private:latest
+          ports:
+            - containerPort: 8090
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: mysql-url
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: mysql-user
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: mysql-password
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: auth-username
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: auth-password
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: auth-secret-key
+            - name: USER_AVATAR_FOLDER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: user-avatar-folder-name
+            - name: BUCKET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: bucket-name
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: aws-secret-key
+
