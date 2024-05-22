@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: 471112650922.dkr.ecr.ap-south-1.amazonaws.com/auth-private:latest
+          image: 471112650922.dkr.ecr.ap-south-1.amazonaws.com/authentication-service:latest
           ports:
             - containerPort: 8090
           env:
