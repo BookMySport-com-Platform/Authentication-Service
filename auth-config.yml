@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: auth-config
 data:
-  mysql-url: ${MYSQL_URL}
+  mysql-url: jdbc:mysql://13.233.137.1:3306/bookmysport
   user-avatar-folder-name: UserAvatars
   bucket-name: bookmysport.com

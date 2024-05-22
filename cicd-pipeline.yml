@@ -50,7 +50,7 @@ phases:
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Push the latest image to cluster
       - echo Setting up the database url
-      - sed -i 's|${MYSQL_URL}|jdbc:mysql://$DATABASE_IP:3306/$DATABASE_NAME|g' auth-config.yml
+      - sed -i 's|${MYSQL_URL}|http://$DATABASE_IP:3306/$DATABASE_NAME|g' auth-config.yml
       - echo Setting up the PORT
       - sed -i 's|${PORT}|$PORT|g' auth-service.yml
       - kubectl apply -f auth-config.yml
