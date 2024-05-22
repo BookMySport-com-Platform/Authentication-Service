@@ -6,3 +6,4 @@ data:
   mysql-url: jdbc:mysql://13.233.137.1:3306/bookmysport
   user-avatar-folder-name: UserAvatars
   bucket-name: bookmysport.com
+  front-end-url: https://main.deykszmd4gftl.amplifyapp.com/
