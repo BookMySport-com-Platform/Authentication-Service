@@ -48,10 +48,19 @@ public class AvatarUploadService {
                 UserModel user = userRepository.findByEmail(email);
                 if (user != null) {
 
-                    UUID keyForAvatar = UUID.randomUUID();
-                    UUID key = keyForAvatar;
+                    AvatarModel avatarExists = avatarUploadRepository.findByUserId(user.getId());
+
                     AvatarModel avatarModel = new AvatarModel();
-                    avatarModel.setAvatarId(key);
+                    UUID key;
+
+                    if (avatarExists == null) {
+                        UUID keyForAvatar = UUID.randomUUID();
+                        key = keyForAvatar;
+                        avatarModel.setAvatarId(key);
+                    } else {
+                        key = avatarExists.getAvatarId();
+                        avatarModel.setAvatarId(key);
+                    }
 
                     ResponseMessage responseAfterAvatarUpload = s3PutObjectService
                             .putObjectService(user.getId().toString(), key.toString(), avatar).getBody();
