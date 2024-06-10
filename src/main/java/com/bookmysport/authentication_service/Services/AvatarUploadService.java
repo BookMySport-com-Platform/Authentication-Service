@@ -90,13 +90,26 @@ public class AvatarUploadService {
             } else {
                 ServiceProviderModel serviceProvider = serviceProviderRepository.findByEmail(email);
                 if (serviceProvider != null) {
-                    UUID keyForAvatarForSP = UUID.randomUUID();
+
+                    AvatarModel avatarExists = avatarUploadRepository.findByUserId(serviceProvider.getId());
+
+                    AvatarModel avatarModel = new AvatarModel();
+                    UUID key;
+
+                    if (avatarExists == null) {
+                        UUID keyForAvatar = UUID.randomUUID();
+                        key = keyForAvatar;
+                        avatarModel.setAvatarId(key);
+                    } else {
+                        key = avatarExists.getAvatarId();
+                        avatarModel.setAvatarId(key);
+                    }
+
                     ResponseMessage responseAfterAvatarUpload = s3PutObjectService
-                            .putObjectService(serviceProvider.getId().toString(), keyForAvatarForSP.toString(), avatar)
+                            .putObjectService(serviceProvider.getId().toString(), key.toString(), avatar)
                             .getBody();
 
                     if (responseAfterAvatarUpload != null) {
-                        AvatarModel avatarModel = new AvatarModel();
 
                         avatarModel.setUserId(serviceProvider.getId());
                         avatarModel.setAvatarUrl(responseAfterAvatarUpload.getMessage());
