@@ -58,7 +58,7 @@ public class FetchAvatars {
                     AvatarModel avatar = avatarUploadRepository.findByUserId(serviceProvider.getId());
 
                     response.put("success", true);
-                    response.put("avatar", avatar);
+                    response.put("avatar", avatar.getAvatarUrl());
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 } else {
                     Map<String, Object> response = new HashMap<>();
