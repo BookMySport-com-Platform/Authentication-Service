@@ -113,7 +113,7 @@ public class AvatarUploadService {
 
                         avatarModel.setUserId(serviceProvider.getId());
                         avatarModel.setAvatarUrl(responseAfterAvatarUpload.getMessage());
-
+                        avatarModel.setDateOfGenration(LocalDate.now());
                         avatarUploadRepository.save(avatarModel);
 
                         responseMessage.setSuccess(true);
